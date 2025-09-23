@@ -1,7 +1,7 @@
 import express from "express";
 import validationMiddleware from "../middlewares/middleware";
 import { CreateUserDto } from "../dto/create-user.dto";
-import { deleteUser, getUser, getUsers, login, logout, registerUser, updateUser } from "../controllers/userController";
+import { deleteUser, getUser, getUsers, registerUser, updateUser } from "../controllers/userController";
 
 
 const userRoutes = express.Router();
@@ -11,8 +11,6 @@ userRoutes.get("/", getUsers);
 userRoutes.get("/:id", getUser);
 userRoutes.delete("/:id", deleteUser);
 userRoutes.put("/:id", updateUser);
-userRoutes.post("/login", login);
-userRoutes.post("/logout", logout);
 
 
 export default userRoutes;

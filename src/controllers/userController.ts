@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { getSystemErrorMap } from "util";
 import { error } from "console";
+import { JwtPayload } from "../types/types";
 
 dotenv.config();
 
@@ -66,62 +67,4 @@ export const updateUser = async (req: Request, res: Response) => {
     }
 };
 
-export const login = async (req: Request, res: Response) => {
-    const { email, password} = req.body;
-    const jwtAccessSecret = process.env.JWT_SECRET;
-    const jwtAccessExpiresIn = process.env.JWT_EXPIRES_IN!;
-    const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET!;
-    const jwtRefreshExpiresIn = process.env.JWT_REFRESH_EXPIRES_IN!;
 
-    const findUser = await User.findOne({ email });
-
-    if(!findUser) return res.status(404).json({ message: "Usuario no encontrado"});
-
-    const isMatch = await bcrypt.compare(password, findUser.password);
-    if (!isMatch) return res.status(401).json({ message: "Credenciales inválidas"});
-
-    if(!jwtAccessSecret || !jwtRefreshSecret){
-        return res.status(500).json({ message: "JWT no definido"})
-    }
-    const accessToken = jwt.sign(
-        {
-            userId: findUser._id.toString(), email: findUser.email
-        },
-        jwtAccessSecret,
-        {
-            expiresIn: jwtAccessExpiresIn
-        }
-    );
-
-    const refeshToken = jwt.sign(
-        {
-            userId: findUser._id.toString()
-        },
-        jwtRefreshSecret,
-        {
-            expiresIn: jwtRefreshExpiresIn
-        }
-    )
-
-    res.cookie('accessToken', accessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 60 * 1000 // 1 minuto
-    });
-
-    res.cookie('refreshToken', refeshToken,{
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 dias 
-    })
-
-    return res.json({ message: 'Login exitoso'})
-}
-
-export const logout = async (req: Request, res: Response) => {
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
-    return res.json({ message: 'Logout exitoso'})
-}

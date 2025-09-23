@@ -14,29 +14,35 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
         jwt.verify(token, SECRET_KEY);
         next();
     } catch (err){
-        return res.status(401).json({ message: err})
+        return validateRefreshToken(req, res, next);
     }
 };
 
-const validateRefeshToken = (req: Request, res: Response, next: NextFunction) => {
-    const token = req.cookies.refeshToken;
+const validateRefreshToken = (req: Request, res: Response, next: NextFunction) => {
+    const token = req.cookies.refreshToken;
 
-    if(!token) return res.status(401).json({message: 'Token requerido' });
+    if (!token) return res.status(401).json({ message: "Token requerido" });
 
     try {
         const decoded = jwt.verify(token, jwtRefreshSecret) as JwtPayload;
 
-        const accessToken = jwt.sign({ _id: decoded}, SECRET_KEY, {
+
+        const { userId, email } = decoded;
+
+        const accessToken = jwt.sign({ userId, email }, SECRET_KEY, {
             expiresIn: jwtAccessExpiresIn,
         });
 
+        
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
             secure: false,
             sameSite: 'strict',
-            maxAge: 60 * 1000 // 1 minuto
-        })
+            maxAge: 60 * 1000 // 1 minute
+        });
+
+        next();
     } catch (err) {
         return res.status(401).json({ message: err });
     }
-}
+};
