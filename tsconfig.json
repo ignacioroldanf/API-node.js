@@ -10,7 +10,6 @@
     "skipLibCheck": true,
     "noImplicitAny": true,
     "allowImportingTsExtensions": true,
-    "noEmit": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   }
