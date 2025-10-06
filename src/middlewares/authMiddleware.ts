@@ -1,20 +1,18 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { JwtPayload } from "../types/types"
+import { JwtPayload } from "../types/types";
 
-const  SECRET_KEY = process.env.JWT_SECRET!;
+const SECRET_KEY = process.env.JWT_SECRET!;
 const jwtAccessExpiresIn = process.env.JWT_EXPIRES_IN!;
 const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET!;
 
-
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const token = req.cookies.accessToken;
-
     try {
         jwt.verify(token, SECRET_KEY);
         next();
-    } catch (err){
-        return validateRefreshToken(req, res, next);
+    } catch (error) {
+        validateRefreshToken(req, res, next);
     }
 };
 
@@ -26,14 +24,10 @@ const validateRefreshToken = (req: Request, res: Response, next: NextFunction) =
     try {
         const decoded = jwt.verify(token, jwtRefreshSecret) as JwtPayload;
 
-
-        const { userId, email } = decoded;
-
-        const accessToken = jwt.sign({ userId, email }, SECRET_KEY, {
+        const accessToken = jwt.sign({ _id: decoded._id }, SECRET_KEY, {
             expiresIn: jwtAccessExpiresIn,
         });
 
-        
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
             secure: false,

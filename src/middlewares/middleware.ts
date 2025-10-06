@@ -4,14 +4,8 @@ import { NextFunction, Request, Response } from "express";
 
 const validationMiddleware = (dtoClass: any) => {
   return async (req: Request, res: Response, next: NextFunction) => {
-console.log("DTO recibido:", req.body);
-const output = plainToInstance(dtoClass, req.body, { enableImplicitConversion: true });
-console.log("Instancia transformada:", output);
-    const errors = await validate(output, {
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      skipMissingProperties: false
-    });
+    const output = plainToInstance(dtoClass, req.body);
+    const errors = await validate(output, { forbidNonWhitelisted: true });
 
     if (errors.length > 0) {
       const formattedErrors = errors.map((error) => ({

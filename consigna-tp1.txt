@@ -1,0 +1,38 @@
+Actividad:
+Desarrollar un proyecto backend en Node.js con TypeScript y desplegarlo en Render (3 personas máximo). El mismo debe incluir:
+
+Autenticación con login, register y logout.
+Manejo de accessToken y refreshToken con JWT.
+Persistir tokens en cookies.
+CRUD completo de productos.
+Gestión de un carrito de compras.
+Definición de modelos y middlewares correspondientes.
+Base de datos no sql (mongoDB).
+La entrega consistirá en:
+
+Repositorio de GitHub.
+Proyecto desplegado en Render.
+Documentación de las principales APIs desarrolladas (endpoints, breve descripción y ejemplos de uso).
+Ej:
+
+URL Base: https://base.com/api
+
+Registro de Usuario
+
+Endpoint: POST /auth/register - Registra un nuevo usuario en el sistema
+
+Request:
+
+{
+
+"name": "string (requerido)",
+
+ "email": "string (requerido, único)",
+
+"password": "string (requerido, min 6 caracteres)"
+
+}
+
+
+
+El objetivo es integrar conceptos de autenticación, seguridad, persistencia de datos y despliegue en la nube.

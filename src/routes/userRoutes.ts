@@ -1,16 +1,23 @@
+import {
+  registerUser,
+  deleteUser,
+  getUser,
+  getUsers,
+  updateUser,
+  login,
+} from "../controllers/userController";
 import express from "express";
 import validationMiddleware from "../middlewares/middleware";
 import { CreateUserDto } from "../dto/create-user.dto";
-import { deleteUser, getUser, getUsers, registerUser, updateUser } from "../controllers/userController";
+import { UpdateUserDto } from "../dto/update-user.dto";
 
+const router = express.Router();
 
-const userRoutes = express.Router();
+router.post("/", validationMiddleware(CreateUserDto), registerUser);
+router.get("/", getUsers);
+router.get("/:id", getUser);
+router.delete("/:id", deleteUser);
+router.put("/:id", validationMiddleware(UpdateUserDto), updateUser);
+router.post("/login", login);
 
-userRoutes.post("/", validationMiddleware(CreateUserDto), registerUser);
-userRoutes.get("/", getUsers);
-userRoutes.get("/:id", getUser);
-userRoutes.delete("/:id", deleteUser);
-userRoutes.put("/:id", updateUser);
-
-
-export default userRoutes;
+export default router;
