@@ -1,0 +1,21 @@
+En este archivo se encontraran ejemplos de solicitudes http:
+
+                Agregar, modificar o eliminar un producto de una orden
+
+POST/PUT/DELETE:     /api/68c984315a6f72081f660900/orden
+Request:
+{
+    "productId": "68adb67113e1713f51a98dd5",
+    "cantidad": 1
+}
+
+                    
+                    Login
+
+POST: /api/auth/login
+
+Request:
+{
+    "email": "user@gmail.com",
+    "password": "user"
+}
